@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura</title>
+    <link rel="icon" href="img/icon.png" type="image/x-icon">
+    <style>
+        @font-face {
+            font-family: Helvetica;
+            src: url(fonts/HelveticaNeue-Medium.woff2);
+        }
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Helvetica;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: white;
+        }
+
+        .logo-container {
+            width: 100px;
+        }
+
+        .logo {
+            width: 100%;
+            height: 100%;
+        }
+
+        .nav-menu ul {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-left: 20px;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+        }
+
+        /* Menú desplegable */
+        .menu-btn {
+            display: none;
+            background-color: yellow;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Degradado para el fondo del menú */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgb(255, 255, 0), rgb(175, 175, 28));
+            display: none;
+            font-size: 24px;
+            padding: 30px;
+        }
+
+        .menu-overlay.active {
+            display: flex;
+        }
+
+        .menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu li {
+            margin: 20px 0;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+        }
+
+        /* Botón para cerrar el menú */
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            color: black;
+            cursor: pointer;
+        }
+
+        /* Estilos para pantallas pequeñas */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+        }
+
+        /* Estilos para la cabecera */
+        .wq-header {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 50px;
+            color: rgb(0, 0, 0);
+            text-align: left;
+            background: url('img/fondo-lineas.png') no-repeat center center/cover;
+            background-size: cover;
+            background-position: center;
+            height: 80vh;
+        }
+
+        .wq-dot {
+            color: #7FFF00; /* Color del punto */
+        }
+
+        .wq-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 50px;
+        }
+
+        .wq-button {
+            padding: 15px 30px;
+            background-color: #000;
+            color: white;
+            text-transform: uppercase;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            letter-spacing: 1px;
+            font-size: 1rem;
+            display: inline-block;
+        }
+
+        .wq-button:hover {
+            background-color: #444;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .wq-header {
+                height: 50vh;
+                background: none;
+            }
+
+            .wq-subtitle {
+                font-size: 1rem;
+            }
+
+            .wq-button {
+                font-size: 0.9rem;
+                padding: 12px 25px;
+                align-items: center;
+            }
+        }
+
+        /* Animación de tipeo */
+        .wq-title {
+            font-size: 5vw; /* Tamaño relativo al ancho de la pantalla */
+            font-weight: bold;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 4px solid black;
+            display: inline-block;
+            animation: typing 4s steps(40) 1s forwards, blink 0.75s step-end infinite;
+        }
+
+        /* Efecto de parpadeo del cursor */
+        .wq-dot {
+            display: inline-block;
+            animation: blink 0.75s step-end infinite;
+        }
+
+        /* Animación de tipeo */
+        @keyframes typing {
+            0% {
+                width: 0;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        /* Efecto de parpadeo */
+        @keyframes blink {
+            50% {
+                border-color: transparent;
+            }
+        }
+
+        /* Cambios de texto */
+        .wq-title::before {
+            content: "transformamos tu presencia";
+            animation: changeText 16s steps(40) 1s infinite;
+        }
+
+        /* Cambiar el texto después de un tiempo */
+        @keyframes changeText {
+            25% {
+                content: "innovamos digitalmente";
+            }
+            50% {
+                content: "impulsamos tu marca";
+            }
+            75% {
+                content: "creamos soluciones";
+            }
+        }
+
+        /* Estilos responsivos */
+        @media (max-width: 1200px) {
+            .wq-title {
+                font-size: 10vw; /* Ajuste para pantallas más grandes */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .wq-title {
+                font-size: 24px; /* Ajuste para tablets */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .wq-title {
+                font-size: 20px; /* Ajuste para dispositivos móviles */
+                margin-bottom: 30px;
+            }
+        }
+        
+        .ew-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .ew-box {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .ew-box h3 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .ew-box p {
+            font-size: 16px;
+            color: #777;
+        }
+
+        .ew-button {
+            background-color: #00d400;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            text-transform: uppercase;
+        }
+
+        /* Responsive para pantallas pequeñas */
+        @media (max-width: 768px) {
+            .ew-container {
+                flex-direction: column;
+            }
+
+            .ew-box {
+                margin-bottom: 20px;
+            }
+        }
+ 
+ .rew-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .rew-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            margin: 0 auto;
+            
+        }
+
+        .rew-image {
+            width: 70%;
+            margin-bottom: 20px;
+            margin: 0 auto;
+               margin-left: auto;       /* Centra horizontalmente */
+    margin-right: auto;
+    
+        }
+
+        .rew-image img {
+            width: 70%;
+            border-radius: 10px;
+               margin-left: auto;       /* Centra horizontalmente */
+    margin-right: auto;
+            
+        }
+
+        .rew-text {
+            text-align: center;
+        }
+
+        .rew-text h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .rew-text p {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        /* Estilo para pantallas pequeñas */
+        @media (max-width: 768px) {
+            .rew-container {
+                grid-template-columns: 1fr;
+            }
+
+            .rew-card {
+                flex-direction: column;
+            }
+
+            .rew-image {
+                margin-bottom: 20px;
+                width: 100%;
+            }
+
+            .rew-text {
+                width: 100%;
+            }
+        }
+
+        .servicios {
+    text-align: center;
+    padding: 50px;
+}
+
+.servicios h2 {
+    font-size: 40px;
+    font-weight: bold;
+    color: #000;
+    position: relative;
+}
+
+.servicios h2 span {
+    color: #8CC63F; /* Color verde */
+    font-size: 30px;
+    position: absolute;
+    bottom: -10px;
+}
+
+.servicios p {
+    font-size: 14px;
+    color: #555;
+    margin: 20px 0;
+    line-height: 1.5;
+}
+
+.btn-contacto {
+    background-color: #8CC63F; /* Verde */
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.btn-contacto:hover {
+    background-color: #7bb32e;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .servicios h2 {
+        font-size: 30px;
+    }
+
+    .servicios p {
+        font-size: 16px;
+    }
+
+    .btn-contacto {
+        font-size: 16px;
+        padding: 8px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .servicios h2 {
+        font-size: 25px;
+    }
+
+    .servicios p {
+        font-size: 14px;
+    }
+
+    .btn-contacto {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+}
+
+.services-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 20px;
+}
+
+.service-card {
+  background-color: #f4f4f4;
+  border-radius: 15px;
+  padding: 30px;
+  width: 30%;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.service-card h3 {
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+.service-card p {
+  font-size: 12px;
+  text-align: left;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.service-card .icon {
+  width: 50px;
+  height: 50px;
+  background: url('path_to_your_image') no-repeat center;
+  background-size: contain;
+  margin: 0 auto 20px auto;
+}
+
+.service-card button {
+  padding: 12px 25px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.service-card button:hover {
+  background-color: #555;
+}
+
+#ecommerce {
+  background-color: white;
+}
+
+#digital-marketing {
+  background-color: #222222;
+  color: white;
+}
+
+#consultorias {
+  background-color: #c8ff2a;
+  color: black;
+}
+
+@media (max-width: 768px) {
+  .services-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .service-card {
+    width: 90%;
+    margin-bottom: 20px;
+  }
+}
+.tuq-testimonials {
+  text-align: center;
+  margin: 50px auto;
+  max-width: 900px;
+}
+
+.tuq-title {
+  font-size: 36px;
+  font-weight: bold;
+  color: black;
+  margin-bottom: 20px;
+}
+
+.tuq-description {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 40px;
+}
+
+.tuq-review {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  gap: 20px;
+}
+
+.tuq-review-image img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.tuq-review-content {
+  text-align: left;
+  max-width: 500px;
+}
+
+.tuq-client-name {
+  font-size: 20px;
+  font-weight: bold;
+  color: black;
+  margin-bottom: 10px;
+}
+
+.tuq-rating span {
+  color: #f1c40f;  /* Yellow color for stars */
+  font-size: 18px;
+}
+
+.tuq-review-text {
+  font-size: 14px;
+  color: #666;
+  margin: 10px 0;
+}
+
+.tuq-client-website {
+  font-size: 14px;
+  color: #2ecc71;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.tuq-client-website:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .tuq-review {
+    flex-direction: column;
+    align-items: center;
+    margin: 18px;
+  }
+
+  .tuq-review-image img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .tuq-review-content {
+    text-align: center;
+  }
+}
+
+.uri-container {
+  background-color: #7ec8ff; /* Color azul */
+  text-align: center;
+  padding: 60px 20px;
+  margin: 0 auto;
+}
+
+.uri-title {
+  font-size: 45px;
+  font-weight: bold;
+  color: black;
+  margin-bottom: 20px;
+}
+
+.uri-description {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.uri-button {
+  font-size: 14px;
+  color: black;
+  background-color: #f4f04f; /* Amarillo */
+  padding: 15px 30px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.uri-button:hover {
+  background-color: #e3d025; /* Cambio de color cuando pasa el mouse */
+}
+/* Estilo del footer */
+.ewi-footer {
+    background-color: #000;
+    color: #fff;
+    padding: 40px 0;
+    padding: 20px;
+}
+
+.ewi-footer-content {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.ewi-footer-left h1 {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.ewi-footer-left span {
+    color: #8CC63F; /* Color verde */
+}
+
+.ewi-footer-left p {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* Estilo de las secciones del footer */
+.ewi-footer-right {
+    display: flex;
+    gap: 30px;
+}
+
+.ewi-footer-section h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.ewi-footer-section ul {
+    list-style: none;
+}
+
+.ewi-footer-section li {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.ewi-footer-section a {
+    text-decoration: none;
+    color: #fff;
+}
+
+.ewi-footer-section a:hover {
+    text-decoration: underline;
+}
+
+.ewi-footer-section form {
+    margin-top: 10px;
+}
+
+.ewi-footer-section input {
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    margin-right: 10px;
+    width: 200px;
+}
+
+.ewi-footer-section button {
+    background-color: #8CC63F;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.ewi-footer-bottom {
+    text-align: center;
+    padding-top: 10px;
+    font-size: 14px;
+    color: #bbb;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .ewi-footer-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .ewi-footer-right {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .ewi-footer-section {
+        width: 80%;
+        margin-bottom: 20px;
+    }
+
+    .ewi-footer-left h1 {
+        font-size: 28px;
+    }
+
+    .ewi-footer-left p {
+        font-size: 16px;
+    }
+
+    .ewi-footer-section h3 {
+        font-size: 20px;
+    }
+
+    .ewi-footer-section li {
+        font-size: 14px;
+    }
+
+    .ewi-footer-section input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .ewi-footer-section button {
+        width: 100%;
+        padding: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .ewi-footer-left h1 {
+        font-size: 24px;
+    }
+
+    .ewi-footer-left p {
+        font-size: 14px;
+    }
+
+    .ewi-footer-section h3 {
+        font-size: 18px;
+    }
+
+    .ewi-footer-section li {
+        font-size: 12px;
+    }
+}
+.rew-card {
+    transition: transform 0.3s ease; /* Hace que la animación sea suave */
+}
+
+.rew-card:hover {
+    transform: translateY(-10px); /* Eleva el div un poco */
+}
+.service-card {
+    transition: transform 0.3s ease; /* Transición suave */
+}
+
+.service-card:hover {
+    transform: translateY(-15px); /* Eleva el div un poco más */
+}
+
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-container">
+            <img src="img/logo.png" alt="Logo" class="logo">
+        </div>
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="#">Portafolio</a></li>
+                <li><a href="#">Servicios</a></li>
+                <li><a href="#">Nosotros</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Contacto</a></li>
+            </ul>
+        </nav>
+        <button class="menu-btn" onclick="toggleMenu()">Menú</button>
+    </header>
+
+    <!-- Menú desplegable -->
+    <div class="menu-overlay" id="menuOverlay">
+        <div class="close-btn" onclick="toggleMenu()">×</div>
+        <nav class="menu">
+            <ul>
+                <li><a href="#">Portafolio</a></li>
+                <li><a href="#">Servicios</a></li>
+                <li><a href="#">Nosotros</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Contacto</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="wq-header">
+        <h1 class="wq-title"><span class="wq-dot">.</span></h1>
+        <p class="wq-subtitle">agencia experta en desarrollo web y publicidad digital<br>¡TE LLEVAMOS A DONDE QUIERES LLEGAR!</p>
+        <a href="#" class="wq-button">conocer más</a>
+    </div>
+<div class="ew-container">
+        <div class="ew-box">
+    <h3 id="counter2">+0</h3>
+            <p>sitios desarrollados</p>
+            <p>en Perú,  Sudamérica & Europa</p>
+        </div>
+
+        <div class="ew-box">
+    <h3 id="counter1">+0</h3>
+
+            <p>en publicidades</p>
+            <p>te ayudamos a multiplicar tus ventas</p>
+        </div>
+
+        <div class="ew-box">
+    <h3 id="counter3">+0</h3>
+            <p>años de expreriencias</p>
+            <p></p>
+        </div>
+    </div> <br><br>
+<center><h2>nuestros pathers</h2></center> <br>
+ 
+
+<div class="rew-container">
+        <div class="rew-card">
+            <div class="rew-image">
+<center>
+                    <img src="img/portafolio-2-alo-yoga-desarrollo_c6cfef81-1364-4b5b-8f0a-c5e0c0d8a5be.webp" alt="Alo Yoga México">
+
+</center>            </div>
+            <div class="rew-text">
+                <h3>alo yoga méxico</h3>
+                <p>desarrollo y personalización de plantilla a la medida | diseño ux/ui</p>
+            </div>
+        </div>
+        <div class="rew-card">
+            <div class="rew-image">
+            <center>    <img src="img/intanta.jpg" alt="Alo Yoga México"></center>
+            </div>
+            <div class="rew-text">
+                <h3>innata</h3>
+                <p>desarrollo web  | configuración de catálogo</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="rew-container">
+        <div class="rew-card">
+            <div class="rew-image">
+<center>
+                    <img src="img/nine.webp" alt="Alo Yoga México">
+
+</center>            </div>
+            <div class="rew-text">
+                <h3>nine west </h3>
+                <p>diseño web | personalización de plantilla | configuración de apps</p>
+            </div>
+        </div>
+        <div class="rew-card">
+            <div class="rew-image">
+            <center>    <img src="img/ko.webp" alt="Alo Yoga México"></center>
+            </div>
+            <div class="rew-text">
+                <h3>koblenz</h3>
+                <p>diseño web | personalizacion web | integraciones</p>
+            </div>
+        </div>
+    </div>
+
+
+  <section class="servicios">
+        <h2>servicios integrales<span>.</span></h2>
+        <p>todos nuestros servicios son enfocados en diseñar, mejorar y optimizar cualquier desarrollo web y a la generacion de ventas mediante publicidad digital</p>
+        <a href="#contacto" class="btn-contacto">contáctanos</a>
+    </section>
+
+
+<div class="services-container">
+  <div class="service-card" id="ecommerce">
+  <img src="img/icono-circulos_1400x.png" alt="" style="width: 100px; float: left;">
+        <br><br> <br><br>
+    <h3>desarrollo de paginas web</h3>
+    <p>diseño . rediseño . migración</p>
+    <p style="margin-top: 120px;">Desarrollamos y diseñamos tu pagina web o tienda en linea con un enfoque integral en la experiencia del usuario (UX), aplicando las mejores prácticas y todo el conocimiento que nos distingue como líderes en el desarrollo web y comercio electrónico.</p>
+    <button>más información</button>
+  </div>
+  
+  <div class="service-card" id="digital-marketing">
+  <img src="img/circulos-iconos_1400x (1).webp" alt="" style="width: 100px; float: left;">
+        <br><br> <br><br>
+    <h3>marketing digital</h3>
+    <p>contenido . estrategia . conversión</p>
+    <p style="margin-top: 120px;">creamos estrategias de marketing digital enfocadas completamente en la conversión y tráfico de tu empresa.</p>
+    <button>más información</button>
+  </div>
+  
+  <div class="service-card" id="consultorias">
+     <img src="img/icono-circulos_1400x.png" alt="" style="width: 100px; float: left;">
+        <br><br> <br><br>
+    <h3>consultorías</h3>
+    <p>procesos . optimización . análisis</p>
+    <p style="margin-top: 120px;">te acompañamos en la busqueda de tu sistema, tienda, o pagina creamos un plan perfecto que te permita automatizar tu empresa para potenciar e incrementar tus ventas.</p>
+    <button>más información</button>
+  </div>
+</div>
+
+
+<div class="tuq-testimonials">
+  <h2 class="tuq-title">crecemos contigo.</h2>
+  <p class="tuq-description">más que una agencia, queremos ser tus partners para llevarte al siguiente nivel</p>
+
+  <div class="tuq-review">
+    <div class="tuq-review-image">
+      <img id="review-image" src="img/reviews-desarrollo-de-ecommerce-salomon-mexico.webp" alt="Review Image">
+    </div>
+    <div class="tuq-review-content">
+      <h3 id="client-name" class="tuq-client-name">salomon</h3>
+      <div id="rating" class="tuq-rating">
+        <span>⭐⭐⭐⭐⭐</span>
+      </div>
+      <p id="review-text" class="tuq-review-text">
+        "Increíble trabajo, estamos felices con la página, la atención y el partnership de Triciclo. Para nosotros era muy importante recrear la página global de Salomon, y Triciclo lo logró sin dudas. Muchas gracias!"
+      </p>
+      <a id="client-website" href="https://salomon.com.mx" class="tuq-client-website">salomon.com.mx</a>
+    </div>
+  </div>
+</div>
+
+<div class="uri-container">
+  <h2 class="uri-title">TRABAJEMOS JUNTOS</h2>
+  <p class="uri-description">
+    ¿Buscas un socio confiable para hacer tu pagina web o publicidad digital? Cuéntanos sobre tu proyecto y trabajemos juntos para hacer que tu negocio sea más exitoso.
+  </p>
+  <a href="#contact" class="uri-button">CONTÁCTANOS &rarr;</a>
+</div>
+<footer class="ewi-footer">
+        <div class="ewi-footer-content">
+            <div class="ewi-footer-left">
+                <h1>creamos tu <span>proyecto</span></h1>
+                <p>te llevamos a donde quieres llegar</p>
+            </div>
+            <div class="ewi-footer-right">
+                <div class="ewi-footer-section">
+                    <h3>más de aura</h3>
+                    <ul>
+                        <li><a href="#">nuestro equipo</a></li>
+                        <li><a href="#">servicios</a></li>
+                        <li><a href="#">caso de éxito</a></li>
+                    </ul>
+                </div>
+                <div class="ewi-footer-section">
+                    <h3>contáctanos</h3>
+                    <ul>
+                        <li>teléfono: (+51) 927 874 922</li>
+                        <li>email: hola@somosarua.com</li>
+                        <li>Lima, Perú</li>
+                        <li>facebook, instagram, linkedin</li>
+                    </ul>
+                </div>
+                <div class="ewi-footer-section">
+                    <h3>newsletter</h3>
+                    <p>¿Quieres recibir noticias sobre tips, ofertas y capacitaciones?</p>
+                    <form>
+                        <input type="email" placeholder="Correo electrónico" required>
+                        <button type="submit">→</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="ewi-footer-bottom">
+            <p>© 2025, Aura </p>
+        </div>
+    </footer>
+</body>
+</html>
+
+    <script>
+        // Función para mostrar y ocultar el menú
+        function toggleMenu() {
+            const menu = document.getElementById("menuOverlay");
+            menu.classList.toggle("active");
+        }
+    </script>
+
+     <script>
+        // Primer contador (0 a 300)
+        const counter1 = document.getElementById('counter1');
+        let count1 = 0;
+        const target1 = 300;
+        const duration = 5000; // 5 segundos
+        const increment1 = target1 / (duration / 100); // Incremento por cada 100ms
+
+        function updateCounter1() {
+            count1 += increment1;
+            if (count1 >= target1) {
+                count1 = target1;
+            }
+            counter1.textContent = `+${Math.round(count1)}`;
+            if (count1 < target1) {
+                requestAnimationFrame(updateCounter1);
+            }
+        }
+
+        updateCounter1();
+
+        // Segundo contador (0 a 150)
+        const counter2 = document.getElementById('counter2');
+        let count2 = 0;
+        const target2 = 150;
+        const increment2 = target2 / (duration / 100); // Incremento por cada 100ms
+
+        function updateCounter2() {
+            count2 += increment2;
+            if (count2 >= target2) {
+                count2 = target2;
+            }
+            counter2.textContent = `+${Math.round(count2)}`;
+            if (count2 < target2) {
+                requestAnimationFrame(updateCounter2);
+            }
+        }
+
+        updateCounter2();
+
+        // Tercer contador (0 a 5)
+        const counter3 = document.getElementById('counter3');
+        let count3 = 0;
+        const target3 = 5;
+        const increment3 = target3 / (duration / 100); // Incremento por cada 100ms
+
+        function updateCounter3() {
+            count3 += increment3;
+            if (count3 >= target3) {
+                count3 = target3;
+            }
+            counter3.textContent = `+${Math.round(count3)}`;
+            if (count3 < target3) {
+                requestAnimationFrame(updateCounter3);
+            }
+        }
+
+        updateCounter3();
+    </script>
+    <script>
+        // Array con los datos que van a cambiar
+const testimonials = [
+  {
+    image: "img/reviews-desarrollo-de-ecommerce-salomon-mexico.webp", // Ruta de la imagen
+    name: "salomon",
+    rating: "⭐⭐⭐⭐⭐",
+    text: '"Increíble trabajo, estamos felices con la página, la atención y el partnership de Aura. Para nosotros era muy importante recrear la página global de Salomon, y Aura lo logró sin dudas. Muchas gracias!"',
+    website: "alomon.com.mx"
+  },
+  {
+    image: "img/12.webp", // Ruta de la imagen
+    name: "Koblenz",
+    rating: "⭐⭐⭐⭐⭐",
+    text: '"Excelente experiencia trabajando con este equipo. Mejoraron nuestra página web y la integración con todos nuestros sistemas de backend."',
+    website: "koblenz.com.mx"
+  },
+  {
+    image: "img/13.webp", // Ruta de la imagen
+    name: "adidas",
+    rating: "⭐⭐⭐⭐⭐",
+    text: '"La atención al cliente fue fantástica. No solo crearon una web increíble, sino que también ayudaron con las estrategias de marketing digital."',
+    website: "ticnot.com"
+  }
+];
+
+let currentIndex = 0;
+
+// Función para actualizar el contenido
+function changeTestimonial() {
+  const testimonial = testimonials[currentIndex];
+  document.getElementById("review-image").src = testimonial.image;
+  document.getElementById("client-name").innerText = testimonial.name;
+  document.getElementById("rating").innerHTML = `<span>${testimonial.rating}</span>`;
+  document.getElementById("review-text").innerText = testimonial.text;
+  document.getElementById("client-website").href = testimonial.website;
+  document.getElementById("client-website").innerText = testimonial.website;
+
+  // Incrementar el índice y reiniciar si es necesario
+  currentIndex = (currentIndex + 1) % testimonials.length;
+}
+
+// Cambiar cada 5 segundos
+setInterval(changeTestimonial, 5000);
+
+// Llamar a la función inicialmente para mostrar el primer testimonio
+changeTestimonial();
+
+    </script>
+</body>
+</html>
