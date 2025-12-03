@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Turnos - Reserva</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent:#0f7b7a;
+      --muted:#6b6b6b;
+      --danger:#d60000;
+      --card:#ffffff;
+      --shadow: 0 6px 18px rgba(0,0,0,0.06);
+      --btn-blue:#80a9c1;
+    }
+    *{box-sizing:border-box}
+    body{
+      font-family:'Roboto',system-ui,Arial;
+      background:#eef2f5;
+      margin:12px;
+      color:#333;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* Layout full width (no centered box) */
+    header{display:flex;flex-direction:column;align-items:center;margin-bottom:12px}
+    header img{max-width:240px;height:auto}
+    main{max-width:1100px;margin:0 auto;padding:18px;background:transparent}
+
+    h1{font-family:'Playfair Display',serif;color:var(--accent);text-align:center;margin:8px 0;font-size:34px}
+    .notice{color:var(--danger);text-align:center;font-weight:700;margin:10px 0}
+
+    .form-area{background:#fff;border-radius:8px;padding:18px;box-shadow:var(--shadow);}
+
+    .section-title{color:var(--accent);font-weight:700;margin:12px 0;font-size:18px;text-align:left}
+    label{display:block;margin:8px 0 6px;font-weight:600}
+    .required{color:var(--danger);font-weight:700}
+    select,input[type=text],input[type=email],input[type=date],input[type=time]{width:100%;padding:9px 10px;border:1px solid #d6d6d6;border-radius:4px;background:#fff}
+
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .small-note{font-size:13px;color:var(--muted);margin-top:6px}
+    .red-note{color:var(--danger);font-weight:700;font-size:13px;margin-top:6px}
+
+    .actions{display:flex;gap:12px;align-items:center;margin-top:12px}
+    .btn{flex:1;padding:10px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600}
+    .btn-primary{background:var(--btn-blue);color:#fff}
+    .btn-disabled{background:#d8dbe0;color:#7a7a7a;cursor:not-allowed}
+    .btn-secondary{background:#f4f4f4;border:1px solid #e0e0e0}
+
+    .terms{display:flex;align-items:flex-start;gap:10px;margin-top:8px}
+    footer{margin-top:18px;padding-top:14px;border-top:1px solid #ddd;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted)}
+
+    /* modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;padding:20px;z-index:2000}
+    .modal{background:#fff;max-width:520px;width:100%;border-radius:10px;padding:18px;box-shadow:0 20px 40px rgba(0,0,0,0.3)}
+    .confirm-list{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;margin-top:8px}
+    .confirm-list dt{font-weight:700;color:#333}
+    .confirm-list dd{margin:0;color:var(--muted)}
+    .amount{grid-column:1/-1;text-align:right;font-size:18px;font-weight:700;color:#1b6e6e}
+    @media (max-width:520px){.confirm-list{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+  <header>
+    <!-- Reemplaza src por la ruta de tu logo -->
+    <img src="/ruta/a/tu-logo.png" alt="Logo (reemplaza la ruta)" />
+  </header>
+
+  <main>
+    <h1>Turnos</h1>
+    <div class="notice">Sr Cliente, el último turno sacado borra los anteriores.</div>
+
+    <section class="form-area" aria-labelledby="form-title">
+      <div id="form-title" class="section-title">Planta, Tipo de Vehículo, Fecha y Hora</div>
+
+      <form id="turnosForm" autocomplete="off">
+        <div class="grid">
+          <div>
+            <label>Planta:<span class="required">*</span></label>
+            <select id="planta" required>
+              <option value="">-</option>
+              <option value="itv1">ITV 01 - Chateau</option>
+              <option value="itv2">ITV 02 - Circunvalación</option>
+              <option value="itv3">ITV 03 - Japón</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Tipo de Vehículo:<span class="required">*</span></label>
+            <select id="tipoVeh" required>
+              <option value="">-</option>
+              <option value="automovil">Automóvil</option>
+              <option value="moto175">Motocicleta hasta 175 cc</option>
+              <option value="moto175m">Motocicleta mayor a 175 cc</option>
+              <option value="taxis">Taxis y Remis</option>
+              <option value="camioneta">Camioneta o Utilitario</option>
+              <option value="micro">Micro - ómnibus o Transporte Escolar Menor</option>
+              <option value="omnibus">Ómnibus</option>
+              <option value="trolebus">Trolebús</option>
+              <option value="camion">Camión</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Fecha:<span class="required">*</span></label>
+            <!-- input date: abre calendario nativo en navegadores modernos -->
+            <input id="fecha" type="date" />
+          </div>
+
+          <div>
+            <label>Hora:<span class="required">*</span></label>
+            <!-- input time: abre selector de hora nativo -->
+            <input id="hora" type="time" />
+          </div>
+        </div>
+
+        <div class="section-title">Informacion Personal</div>
+
+        <div class="grid">
+          <div>
+            <label>Nombre y Apellido:<span class="required">*</span></label>
+            <input id="nombre" type="text" />
+          </div>
+
+          <div>
+            <label>Número de Teléfono <small class="red-note">(SIN 0 NI 15 - SIN GUIONES O ESPACIOS)</small><span class="required">*</span></label>
+            <input id="telefono" type="text" placeholder="ej: 351########" />
+          </div>
+
+          <div>
+            <label>Dirección de Correo Electrónico:<span class="required">*</span></label>
+            <input id="email" type="email" />
+          </div>
+
+          <div>
+            <label>Patente <small class="red-note">(SIN GUIONES O ESPACIOS - SIN INTERNO)</small><span class="required">*</span></label>
+            <input id="patente" type="text" />
+          </div>
+        </div>
+
+        <div class="small-note">*Denota campo obligatorio</div>
+
+        <div class="section-title">Información General de la Reserva</div>
+        <p class="small-note">Por favor verifique los detalles de su cita abajo y confirme:</p>
+        <ul class="small-note">
+          <li>Planta: <span id="resPlanta">-</span></li>
+          <li>Tipo de Vehículo: <span id="resTipo">-</span></li>
+          <li>Fecha y Hora: <span id="resFechaHora">-</span></li>
+        </ul>
+
+        <div class="terms">
+          <input id="acepto" type="checkbox" />
+          <div style="font-size:14px">
+            Estoy de acuerdo con los términos y condiciones.<br>
+            <a href="#">Haga click aquí para los términos y condiciones</a>
+          </div>
+        </div>
+
+        <div class="actions" style="margin-top:14px">
+          <button id="reservar" type="button" class="btn btn-primary btn-disabled" disabled>Reservar</button>
+          <button id="cancelar" type="button" class="btn btn-secondary">Cancelar</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <div>© 2025 ITV.</div>
+    <div class="version">Version: 17.04</div>
+  </footer>
+
+  <!-- Modal -->
+  <div id="modal" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true">
+      <h3>Por favor verifique los detalles de su cita</h3>
+      <dl class="confirm-list">
+        <dt>Número de Confirmación:</dt><dd id="confNum">-</dd>
+        <dt>Nombre:</dt><dd id="cNombre">-</dd>
+        <dt>Teléfono:</dt><dd id="cTelefono">-</dd>
+        <dt>Email:</dt><dd id="cEmail">-</dd>
+        <dt>Tipo de Vehículo:</dt><dd id="cTipo">-</dd>
+        <dt>Patente:</dt><dd id="cPatente">-</dd>
+        <dt>Planta:</dt><dd id="cPlanta">-</dd>
+        <dt>Fecha y Hora:</dt><dd id="cFechaHora">-</dd>
+        <div class="amount" id="cImporte">$0,00</div>
+      </dl>
+      <div class="modal-actions" style="display:flex;gap:10px;margin-top:12px">
+        <button id="confirmarPagar" class="btn btn-primary">Confirmar y Pagar</button>
+        <button id="modificar" class="btn btn-secondary">Modificar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('turnosForm');
+    const requiredIds = ['planta','tipoVeh','fecha','hora','nombre','telefono','email','patente'];
+    const reservar = document.getElementById('reservar');
+    const cancelar = document.getElementById('cancelar');
+    const acepto = document.getElementById('acepto');
+    const modal = document.getElementById('modal');
+
+    function updateResumen(){
+      document.getElementById('resPlanta').textContent = document.getElementById('planta').selectedOptions[0].text || '-';
+      document.getElementById('resTipo').textContent = document.getElementById('tipoVeh').selectedOptions[0].text || '-';
+      const f = document.getElementById('fecha').value;
+      const h = document.getElementById('hora').value;
+      // formatea fecha ISO -> dd/mm/YYYY si existe
+      let ff = f;
+      if(f){
+        const d = new Date(f);
+        ff = d.getDate().toString().padStart(2,'0') + '/' + (d.getMonth()+1).toString().padStart(2,'0') + '/' + d.getFullYear();
+      }
+      document.getElementById('resFechaHora').textContent = (ff?ff:'-') + (h?(' '+h):'');
+    }
+
+    function validatePhone(v){ return /^\d{6,12}$/.test(v); }
+    function validatePatente(v){ return /^[A-Za-z0-9]{4,8}$/.test(v); }
+
+    function checkValid(){
+      let ok=true;
+      for(const id of requiredIds){
+        const el = document.getElementById(id);
+        const val = el.value && el.value.trim();
+        if(!val){ok=false;break}
+      }
+      if(ok){
+        if(!validatePhone(document.getElementById('telefono').value)) ok=false;
+        if(!validatePatente(document.getElementById('patente').value)) ok=false;
+        if(!acepto.checked) ok=false;
+      }
+      if(ok){ reservar.disabled=false; reservar.classList.remove('btn-disabled'); }
+      else { reservar.disabled=true; reservar.classList.add('btn-disabled'); }
+    }
+
+    // Generar número de confirmación simple
+    function genConfirmation(){ const t = Date.now().toString(); return t.slice(-12); }
+
+    // Tarifas por tipo (editable)
+    const tarifas = {
+      'automovil': 33283.00,
+      'moto175': 15000.00,
+      'moto175m': 17000.00,
+      'taxis': 30000.00,
+      'camioneta': 35000.00,
+      'micro': 45000.00,
+      'omnibus': 60000.00,
+      'trolebus': 55000.00,
+      'camion': 70000.00
+    };
+
+    function formatMoney(n){ return '$'+n.toLocaleString('es-AR',{minimumFractionDigits:2}); }
+
+    reservar.addEventListener('click',()=>{
+      if(reservar.disabled) return;
+      document.getElementById('confNum').textContent = genConfirmation();
+      document.getElementById('cNombre').textContent = document.getElementById('nombre').value;
+      document.getElementById('cTelefono').textContent = document.getElementById('telefono').value;
+      document.getElementById('cEmail').textContent = document.getElementById('email').value;
+      const tipoSel = document.getElementById('tipoVeh');
+      document.getElementById('cTipo').textContent = tipoSel.selectedOptions[0].text;
+      document.getElementById('cPatente').textContent = document.getElementById('patente').value;
+      document.getElementById('cPlanta').textContent = document.getElementById('planta').selectedOptions[0].text;
+      const f = document.getElementById('fecha').value;
+      const h = document.getElementById('hora').value;
+      let ff = f;
+      if(f){
+        const d = new Date(f);
+        ff = d.getDate().toString().padStart(2,'0') + '/' + (d.getMonth()+1).toString().padStart(2,'0') + '/' + d.getFullYear();
+      }
+      document.getElementById('cFechaHora').textContent = (ff?ff:'-') + (h?(' '+h):'');
+      const tipoVal = tipoSel.value;
+      const importe = tarifas[tipoVal] || 0;
+      document.getElementById('cImporte').textContent = formatMoney(importe);
+      modal.style.display = 'flex';
+    });
+
+    // cerrar modal si clic fuera
+    modal.addEventListener('click', (e)=>{ if(e.target===modal) modal.style.display='none'; });
+    document.getElementById('modificar').addEventListener('click', ()=>{ modal.style.display='none'; });
+
+    document.getElementById('confirmarPagar').addEventListener('click', ()=>{
+      modal.style.display='none';
+      alert('Reserva confirmada. Se procederá al pago (simulado).');
+      document.querySelector('.notice').textContent = 'Sr Cliente, el último turno sacado borra los anteriores.';
+    });
+
+    form.addEventListener('input',()=>{ updateResumen(); checkValid(); });
+    acepto.addEventListener('change',checkValid);
+    cancelar.addEventListener('click',()=>{ form.reset(); updateResumen(); checkValid(); });
+    updateResumen(); checkValid();
+  </script>
+
+</body>
+</html>
