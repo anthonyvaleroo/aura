@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Pago del Turno — Formulario</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --page-bg:#ffffff;
+      --bg:#f0f0f2; /* fondo general similar a la imagen */
+      --card:#ffffff;
+      --muted:#6b6b6b;
+      --accent:#2db34a; /* verde botón similar */
+      --danger:#e03232; /* rojo asterisco */
+      --card-border:#e9eaec;
+      --radius:14px;
+      --max-width:380px; /* ancho parecido a la imagen */
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{font-family:'Roboto',system-ui,Arial;background:#ffffff;margin:12px;color:#333}
+
+    .wrap{min-height:100vh; display:flex; align-items:flex-start; justify-content:center; padding:28px 16px}
+
+    .viewport{width:100%; max-width:420px}
+
+    .title{ text-align:center; margin-bottom:8px }
+    .title h1{margin:0; font-size:22px; font-weight:700}
+    .title p{margin:8px 0 0; color:var(--muted); font-size:15px}
+
+    .card{
+      background:var(--card); border-radius:18px; padding:18px; margin-top:10px; border:1px solid var(--card-border); box-shadow:0 8px 30px rgba(12,18,30,0.06);
+    }
+
+    /* sección gris con título centrado */
+    .section-head{
+      background:#f3f4f6; border-radius:12px; padding:12px 10px; text-align:center; font-weight:700; color:#222; letter-spacing:0.4px; margin-bottom:12px;
+    }
+
+    form{display:flex; flex-direction:column; gap:10px}
+
+    .label{font-size:13px; color:#222; text-align:center; font-weight:600}
+    .asterisk{color:var(--danger); margin-left:6px}
+
+    .input-wrap{display:flex; justify-content:center}
+    input[type="text"], input[type="email"]{
+      width:88%; padding:12px 14px; border-radius:10px; border:1px solid #e6e7e9; font-size:15px; outline:none; background:#fff;
+    }
+    input:focus{box-shadow:0 6px 18px rgba(45,179,74,0.12); border-color:#1b6e6e}
+
+    .row{display:flex; gap:10px; justify-content:center}
+    .row .col{flex:1}
+    .row .col input{width:100%}
+
+    .checkbox-row{display:flex; align-items:center; gap:10px; padding:6px 10px}
+    .checkbox-row label{font-size:14px; color:var(--muted)}
+
+    .btn{display:block; width:62%; margin:8px auto 0; padding:12px 18px; border-radius:12px; background:#1b6e6e; color:#fff; border:none; font-weight:700; cursor:pointer; }
+
+    .note{font-size:13px; color:var(--muted); text-align:center; margin-top:8px}
+
+    /* Keep proportions similar on very small screens */
+    @media (max-width:420px){
+      :root{--max-width:360px}
+      .input-wrap input{width:92%}
+      .btn{width:72%}
+    }
+
+    @media (min-width:900px){
+      .wrap{align-items:center}
+    }
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="viewport" role="main" aria-label="Pago del turno">
+      <div class="title" style="margin-bottom:18px">
+        <div style="display:flex; justify-content:center; margin-bottom:14px;">
+          <!-- Header logo azul -->
+          <div style="display:flex; align-items:center; gap:10px;">
+<center><img src="img/dual_logo.png" alt="" style="width: 350px;">   </center>      
+          </div>
+        </div>
+        <h1 style="color:#1e1e1e">Pago del Turno</h1>
+        <p style="color:#4a4a4a">Seleccione el método de pago:</p>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:center;margin-bottom:10px">
+          <!-- logo como bloque verde en la parte superior (semejante a la imagen) -->        </div>
+
+        <div class="section-head">DATOS DEL MEDIO DE PAGO</div>
+
+        <form novalidate>
+          <div>
+            <div class="label">Titular <span class="asterisk">*</span></div>
+            <div class="input-wrap"><input type="text" name="titular"  required></div>
+          </div>
+
+          <div>
+            <div class="label">Número de Documento <span class="asterisk">*</span></div>
+            <div class="input-wrap"><input type="text" name="documento"  required></div>
+          </div>
+
+          <div>
+            <div class="label">Número de Tarjeta <span class="asterisk">*</span></div>
+            <div class="input-wrap"><input type="text" name="tarjeta" inputmode="numeric" maxlength="19" required></div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="label">Vencimiento <span class="asterisk">*</span></div>
+<div style="padding:6px 10px">
+  <input type="text" id="vencimiento" name="vencimiento" maxlength="5" required placeholder="MM/YY">
+</div>            </div>
+            <div class="col">
+              <div class="label">Cód. De Seguridad <span class="asterisk">*</span></div>
+              <div style="padding:6px 10px"><input type="text" name="cvv"  inputmode="numeric" maxlength="4" required></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="label">Email <span class="asterisk">*</span></div>
+            <div class="input-wrap"><input type="email" name="email"  required></div>
+          </div>
+
+          <div class="checkbox-row">
+            <input type="checkbox" id="terms">
+            <label for="terms">Acepto los términos y condiciones <span class="asterisk">*</span></label>
+          </div>
+
+          <button class="btn" type="submit">Confirmar</button>
+          <p class="note">Tus datos están protegidos y la transacción es segura.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div id="loader" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:white;z-index:9999;transition:opacity .4s">
+    <div style="width:60px;height:60px;border:6px solid #cde1ff;border-top-color:#1e6fff;border-radius:50%;animation:spin 1s linear infinite"></div>
+  </div>
+
+  <script>
+    window.addEventListener('load', ()=>{
+      setTimeout(()=>{
+        const l=document.getElementById('loader');
+        l.style.opacity='0';
+        setTimeout(()=> l.style.display='none',400);
+      },3000);
+    });
+  </script>
+<script>
+document.getElementById('vencimiento').addEventListener('input', function() {
+    let v = this.value.replace(/\D/g, ''); // solo números
+    if (v.length >= 3) {
+        this.value = v.slice(0,2) + '/' + v.slice(2,4);
+    } else {
+        this.value = v;
+    }
+});
+</script>
+  <style>
+    @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+  </style>
+</body>
+</html>
